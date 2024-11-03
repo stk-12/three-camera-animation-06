@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js Camera Animation</title>
+    <link rel="stylesheet" href="scss/style.scss">
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <section class="section section01">
+      <div class="section__inner">
+        <h1 class="ttl js-ttl">
+          <span class="ttl__inner"><span class="ttl__txts js-ttl-txts">Multi</span></span>
+          <span class="ttl__inner"><span class="ttl__txts js-ttl-txts">Route</span></span>
+          <span class="ttl__inner"><span class="ttl__txts js-ttl-txts">Camera</span></span>
+        </h1>
+      </div>
+    </section>
+
+    <div class="controls js-controls is-default">
+      <div class="controls__group controls__group--forward">
+        <button class="controls__btn js-btn-control" data-animation="2">Route A</button>
+        <button class="controls__btn js-btn-control" data-animation="1">Route B</button>
+        <button class="controls__btn js-btn-control" data-animation="3">Route C</button>
+      </div>
+      <div class="controls__group controls__group--back">
+        <button class="controls__btn js-btn-control" data-animation="back">Back</button>
+      </div>
+    </div>
+
+    <small><a href="https://poly.pizza/m/bH724asZeAh" target="_blank">Low poly floating islands by vanAchen [CC-BY] via Poly Pizza</small>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,171 @@
+@import"https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap";
+
+:root {
+}
+
+body {
+  font-family: Bebas Neue,cursive;
+  color: #fff;
+  overflow-x: hidden;
+  // background: #f44336;
+  // background: #f4b436;
+  // background: rgb(208,228,243);
+  // background: linear-gradient(0deg, rgba(208,228,243,1) 0%, rgba(86,157,225,1) 50%, rgba(47,101,190,1) 100%);
+
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    // background: rgb(208,228,243);
+    // background: linear-gradient(0deg, rgba(208,228,243,1) 0%, rgba(86,157,225,1) 50%, rgba(47,101,190,1) 100%);
+    // background: rgb(159,214,255);
+    // background: linear-gradient(0deg, rgba(159,214,255,1) 0%, rgba(86,157,225,1) 50%, rgba(47,101,190,1) 100%);
+    background: linear-gradient(0deg, rgb(136 78 90) 0%, rgb(42 31 63) 50%, rgb(13 12 43) 100%);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+small {
+  color: #fff;
+  font-size: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  a {
+    color: #fff;
+  }
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.section {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+
+  pointer-events: none;
+}
+
+.section__inner {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 20px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200vh;
+  position: relative;
+
+  .section01 & {
+    height: 100vh;
+  }
+}
+
+.ttl {
+  font-size: min(18vw, 30vh);
+  line-height: 0.9;
+  white-space: nowrap;
+  opacity: 0;
+  &__inner {
+    display: block;
+    overflow: hidden;
+  }
+  &__txts {
+    // line-height: 0.9;
+    display: inline-block;
+    transform: translateY(100%);
+  }
+}
+
+.controls {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  gap: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s linear;
+
+  &.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__group {
+    display: flex;
+    gap: 20px;
+    transition: opacity 0.3s linear;
+  }
+
+  &__group--back {
+    position: absolute;
+    transition: opacity 0.3s linear;
+    transition-delay: 0.2s;
+  }
+
+  &__btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    appearance: none;
+
+    background: #fff;
+    font-size: 24px;
+    font-family: Bebas Neue,cursive;
+    padding: 8px 32px;
+    border-radius: 60px;
+  }
+
+  &.is-default {
+    .controls__group--back {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &.is-forward {
+    .controls__group--forward {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .controls__group--back {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &.is-back {
+    .controls__group--forward {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .controls__group--back {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
