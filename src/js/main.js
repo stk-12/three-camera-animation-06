@@ -46,10 +46,11 @@ class Main {
     this.controls = null;
 
 
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
-    this.selectedIsland = 1; // 島を識別するインデックス
-    this.modelLoaded = false; // モデルのロード完了フラグ
+    // this.raycaster = new THREE.Raycaster();
+    // this.mouse = new THREE.Vector2();
+    // this.selectedIsland = 1; // 島を識別するインデックス
+    // this.modelLoaded = false; // モデルのロード完了フラグ
+    // this.canvas.addEventListener('click', (event) => this._onMouseClick(event), false);
 
     this.buttons = {
       island1: document.querySelector('.js-btn-control[data-animation="1"]'),
@@ -57,7 +58,13 @@ class Main {
       island3: document.querySelector('.js-btn-control[data-animation="3"]')
     };
 
-    this.canvas.addEventListener('click', (event) => this._onMouseClick(event), false);
+    // 島の静的な位置を設定
+    this.islandPositions = {
+      island1: new THREE.Vector3(0.4329507251944667, 2.979791312544256, -0.8677406491402966),
+      island2: new THREE.Vector3(-9.652038259892244, 0.1998752561480579, 2.9010576615271613),
+      island3: new THREE.Vector3(-1.4776348324758652, -0.02655733907587776, 9.018948022344265)
+    };
+
 
 
 
@@ -102,8 +109,14 @@ class Main {
       this.scene.add(model);
 
       // 島の位置を保存するためのオブジェクトを初期化
-      this.islandPositions = {};
-      this.modelLoaded = true;
+      // this.islandPositions = {};
+      // this.modelLoaded = true;
+
+      // モデルがロードされた後にボタンを配置
+      this._updateButtonPosition();
+
+      // 初期フレームレンダリング後にボタン位置を再計算
+      requestAnimationFrame(() => this._updateButtonPosition());
 
       this._onResize();
 
@@ -113,31 +126,32 @@ class Main {
     });
   }
 
-  _onMouseClick(event) {
-    // モデルがロードされているかを確認
-    if (!this.modelLoaded || !this.islandPositions) return;
+  // _onMouseClick(event) {
+  //   // モデルがロードされているかを確認
+  //   if (!this.modelLoaded || !this.islandPositions) return;
 
-    // マウスのスクリーン位置を正規化
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  //   // マウスのスクリーン位置を正規化
+  //   this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  //   this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    // レイキャスターを更新
-    this.raycaster.setFromCamera(this.mouse, this.camera);
+  //   // レイキャスターを更新
+  //   this.raycaster.setFromCamera(this.mouse, this.camera);
 
-    // シーン内のオブジェクトとの交差を取得
-    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+  //   // シーン内のオブジェクトとの交差を取得
+  //   const intersects = this.raycaster.intersectObjects(this.scene.children, true);
 
-    if (intersects.length > 0) {
-      // 最初の交差地点を取得し、現在の島の位置として保存
-      const intersection = intersects[0].point;
-      this.islandPositions[`island${this.selectedIsland}`] = intersection.clone();
+  //   if (intersects.length > 0) {
+  //     // 最初の交差地点を取得し、現在の島の位置として保存
+  //     const intersection = intersects[0].point;
+  //     this.islandPositions[`island${this.selectedIsland}`] = intersection.clone();
 
-      console.log(`island${this.selectedIsland}の位置:`, intersection);
+  //     console.log(`island${this.selectedIsland}の位置:`, intersection);
       
-      // 次の島用にインデックスを更新
-      this.selectedIsland = (this.selectedIsland % 3) + 1;
-    }
-  }
+  //     // 次の島用にインデックスを更新
+  //     this.selectedIsland = (this.selectedIsland % 3) + 1;
+  //   }
+  // }
+
 
   _updateButtonPosition() {
     if (!this.islandPositions) return;
@@ -151,15 +165,11 @@ class Main {
       const x = (vector.x * 0.5 + 0.5) * this.viewport.width;
       const y = (-(vector.y * 0.5) + 0.5) * this.viewport.height;
 
-      // ボタンが画面内にある場合に表示
-      if (vector.z > -1 && vector.z < 1) {
-        button.style.display = "block";
-        button.style.position = "absolute";
-        button.style.left = `${x}px`;
-        button.style.top = `${y}px`;
-      } else {
-        button.style.display = "none"; // 画面外なら非表示
-      }
+      // ボタンを画面上に配置
+      button.style.display = "block";
+      button.style.position = "absolute";
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
     });
   }
 
@@ -258,7 +268,7 @@ class Main {
     //レンダリング
     this.renderer.render(this.scene, this.camera);
 
-    this._updateButtonPosition(); // 毎フレームでボタン位置を更新
+    // this._updateButtonPosition(); // 毎フレームでボタン位置を更新
 
     // this.controls.update();
     requestAnimationFrame(this._update.bind(this));
@@ -275,6 +285,9 @@ class Main {
     // カメラのアスペクト比を修正
     this.camera.aspect = this.viewport.width / this.viewport.height;
     this.camera.updateProjectionMatrix();
+
+    // リサイズ後にボタン位置を再計算
+    this._updateButtonPosition();
   }
 
   _handleBtnClick(event) {
