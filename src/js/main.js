@@ -49,6 +49,13 @@ class Main {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
     this.selectedIsland = 1; // 島を識別するインデックス
+    this.modelLoaded = false; // モデルのロード完了フラグ
+
+    this.buttons = {
+      island1: document.querySelector('.js-btn-control[data-animation="1"]'),
+      island2: document.querySelector('.js-btn-control[data-animation="2"]'),
+      island3: document.querySelector('.js-btn-control[data-animation="3"]')
+    };
 
     this.canvas.addEventListener('click', (event) => this._onMouseClick(event), false);
 
@@ -84,8 +91,6 @@ class Main {
       const model = gltf.scene;
       this.animations = gltf.animations;
 
-      console.log('model', model);
-
       // Animation Mixerインスタンスを生成
       this.mixer = new THREE.AnimationMixer(model);
 
@@ -98,6 +103,7 @@ class Main {
 
       // 島の位置を保存するためのオブジェクトを初期化
       this.islandPositions = {};
+      this.modelLoaded = true;
 
       this._onResize();
 
@@ -108,6 +114,9 @@ class Main {
   }
 
   _onMouseClick(event) {
+    // モデルがロードされているかを確認
+    if (!this.modelLoaded || !this.islandPositions) return;
+
     // マウスのスクリーン位置を正規化
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -128,6 +137,30 @@ class Main {
       // 次の島用にインデックスを更新
       this.selectedIsland = (this.selectedIsland % 3) + 1;
     }
+  }
+
+  _updateButtonPosition() {
+    if (!this.islandPositions) return;
+
+    Object.keys(this.islandPositions).forEach((key) => {
+      const position = this.islandPositions[key];
+      const button = this.buttons[key];
+
+      // 3D位置をスクリーン座標に変換
+      const vector = position.clone().project(this.camera);
+      const x = (vector.x * 0.5 + 0.5) * this.viewport.width;
+      const y = (-(vector.y * 0.5) + 0.5) * this.viewport.height;
+
+      // ボタンが画面内にある場合に表示
+      if (vector.z > -1 && vector.z < 1) {
+        button.style.display = "block";
+        button.style.position = "absolute";
+        button.style.left = `${x}px`;
+        button.style.top = `${y}px`;
+      } else {
+        button.style.display = "none"; // 画面外なら非表示
+      }
+    });
   }
 
   _playAnimation(index) {
@@ -224,6 +257,9 @@ class Main {
 
     //レンダリング
     this.renderer.render(this.scene, this.camera);
+
+    this._updateButtonPosition(); // 毎フレームでボタン位置を更新
+
     // this.controls.update();
     requestAnimationFrame(this._update.bind(this));
 
