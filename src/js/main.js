@@ -268,7 +268,7 @@ class Main {
     //レンダリング
     this.renderer.render(this.scene, this.camera);
 
-    // this._updateButtonPosition(); // 毎フレームでボタン位置を更新
+    this._updateButtonPosition(); // 毎フレームでボタン位置を更新
 
     // this.controls.update();
     requestAnimationFrame(this._update.bind(this));
