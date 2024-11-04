@@ -89,7 +89,19 @@ canvas {
   &__txts {
     // line-height: 0.9;
     display: inline-block;
-    transform: translateY(100%);
+    // transform: translateY(100%);
+
+    span {
+      display: inline-block;
+      transform: scaleY(0);
+      transform-origin: center bottom;
+    }
+
+    &.is-show {
+      span {
+        transform-origin: center top;
+      }
+    }
   }
 }
 

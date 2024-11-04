@@ -4,6 +4,7 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { gsap } from "gsap";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
+import { SplitText } from "./splitText";
 
 
 class Main {
@@ -122,6 +123,8 @@ class Main {
 
       this._update();
 
+      this._loadAnimation();
+
 
     });
   }
@@ -226,21 +229,27 @@ class Main {
 
   _loadAnimation() {  
     // ロード時のアニメーション
+    const loadTexts = document.querySelectorAll('.js-ttl-txts')
     const tlLoadAnimation = gsap.timeline({});
     tlLoadAnimation.to('.js-ttl', {
       opacity: 1,
-      delay: 0.6,
+      delay: 0.2,
     })
-    .to('.js-ttl-txts', {
-      y: 0,
-      duration: 0.6,
-      ease: 'circ.out',
-      stagger: 0.03,
+    .to('.js-ttl-txts span', {
+      scaleY: 1.0,
+      duration: 0.7,
+      ease: 'power3.inOut',
+      stagger: 0.04,
+      onComplete: () => {
+        loadTexts.forEach((txt) => {
+          txt.classList.add('is-show');
+        })
+      }
     })
-    .to('.js-ttl-txts', {
-      y: '-100%',
-      duration: 0.6,
-      ease: 'circ.out',
+    .to('.js-ttl-txts span', {
+      scaleY: 0.0,
+      duration: 0.7,
+      ease: 'power3.inOut',
       stagger: 0.03,
       onComplete: () => {
         this.DOM.control.classList.add('is-active');
@@ -251,12 +260,17 @@ class Main {
 
 
   _init() {
+    const ttlTexts = document.querySelectorAll('.js-ttl-txts');
+    ttlTexts.forEach((ttlText) => {
+      new SplitText(ttlText);
+    })
+
     // this._setCamera();
     // this._setControlls();
     this._setLight();
     // this._addMesh();
     this._addModel();
-    this._loadAnimation();
+    // this._loadAnimation();
   }
 
   _update() {
